@@ -1,30 +1,29 @@
-# git cheat sheet (for dummies! 😉)
+# git cheat sheet (Para dummies! 😉)
 
-## Basics
+## Basico
 
-Basic commands in Git that are always important to have on hand
+Los comandos importantes que siempre debes tener a la mano
 
-1. In the folder where you have created your project, open a terminal and to start git, just type
+1. En el folder donde tienes creado el proyecto, abre una terminal y para iniciar git, solo escribe:
 
 ```basch
 git init
 ```
-2. To add the files you want to the staging area, you must do
+2. Para anadir los archivos al staging area:
 
 ```bash
 git add <file>
 ```
 
-To add all in one run instead
+Anadir todos los archivos de una vez:
 
 ```bash
 git add .
 ```
 
-3. Surely there will be files that you do not want to be considered when doing `git add .`, or that are too heavy, in this case you must create a file called `.gitignore`, which will work as follows
+3. Para ignorar archivos al ejecutar `git add .`, y que no esten en el repositorio local/remoto crear un archivo llamado `.gitignore` en la raiz del proyecto.
 
-```.gitignore
-
+```bash
 # files
 /file_I_want_to_ignore.rs 
 /file_I_want_to_ignore2.py
@@ -34,180 +33,184 @@ git add .
 /folder/I/want/to/ignore/
 ```
 
-4. If you want to see what files are ready to be added to the local repository, you can do it with
+4. Ver el estado de los archivos que estan en tu repositorio
 
 ```bash
 git status
 ```
 
-5. When checking you see that everything is correct, it is time to do the commit!!
-(the `-m` flag is so you know what the hell you're doing in the commit, your future self will appreciate it)
+
+5. Cuando todo este correcto podemos hacer entonces el commit (Guardar los cambios en el staging area)
 
 ```bash
-git commit -m "Im doing ..."
+git commit -m "Ahora agregue esta modificacion "
 ```
 
-6. This process will be repeated several times as your project evolves. If you want to see how the history of each commit you have made has been, you can do it with
+La bandera `-m` significa que pasaras un mensaje que describa dichos cambios (tu futuro yo lo agradecera 😉)
+
+
+6. Este proceso podra ocurrir repetidas veces conforme el proyecto crece. Entonces para poder ver el historial de cambios que se han realizado usamos
 
 ```bash
 git log 
 ```
-or in a pretty way like
+o de forma compacta
 
 ```bash
 git log --oneline
 ```
 
-## Branchs
+## Ramas (branchs)
 
-Your project will start to grow and at one point you want to modify something or add something that you do not want to break your hard work, or you are afraid that it does not work as it should. Time to create a branch!
+El proyecto empezara a crecer y en un punto querremos modificarlo sin querer danar alguna componente que ya funciona o para implementar algo nuevo sin temor de perder lo que ya teniamos
 
-To create a branch in which you can make modifications to the project, in which you will have "safe" your other version of the project, you will need to do
+1. Para crear una rama en la cual podamos hacer todas las modificaciones, manteniendo segura esa version del proyecto, haremos
 
-```bash
-git branch <yourNewBranch>
-```
-
-But not so fast cowboy, before doing something stupid you should switch to that new branch, otherwise everything will be lost and the world will end. To switch to the new branch you must do
 
 ```bash
-git checkout <yourNewBranch>
+git branch <nombreNuevaRama>
 ```
 
-This process can be repeated as many times as you need, and to be able to see all the branches, you just have to write
+Pero no tan rapido, antes de hacer una modificacion debemos asegurarnos que estamos en la rama correcta.
+
+2. Para cambiar a otra rama del repositorio (este proceso se repetira tanto como lo necesites)
+
+```bash
+git checkout <nombreNuevaRama>
+```
+
+3. Para poder ver todas las ramas existentes en el repositorio local
 
 ```bash
 git branch
 ```
 
-And to be jumping between branches like a monkey, you just need to keep using the command
+### Borrar ramas
+
+Si algo salio mal y la rama que hiciste arruina todo y quieres borrarlo de tu mente y de la faz de la tierra, entonces
+
+4. Para borrar una rama en el repositorio local
 
 ```bash
-git checkout <anyBranch>
+git branch -d <ramaQueDesaparecera>
 ```
 
-Suppose you blew it, as I am sure it will happen, then you decide to forget that all that happened, and you want to eliminate the branch from your mind and your life.
+En el caso en el que no quierras borrar toda la rama, y solo regresar a un punto en el que el proyecto funcionaba bonis, podemos regresar a un commit especifico
 
-To delete the branch from your local repository, then you must type
-
-```bash
-git branch -d <yourLocalBranch>
-```
-
-Suppose that after a few commits on a branch, something stops working, and before thinking about suicide, we can better go back to when everything worked beautifully
-
-In order to go back in time, we will do it with the `checkout` command, in which we will put the hash of the commit to which we want to return
+5. Para regresar en el tiempo, a un commit especifico
 
 ```bash
 git checkout <commitId>
 ```
 
-If you want to see the differences between commits, you can, but you will have to write
+6. Si quieres ver las diferencias entre commits, deberas ejecutar
 
 ```bash
 git diff <commitId1> <commitId2>
 ```
 
-This does not mean that it is ready, now you are only seeing it, so that everything really returns to that point you must write
-
+7. Para revertir los cambios y fijar ese commit como punto de partida
 
 ```bash
 git add .
-git commit -m "Reverting to <commitId>"
+git commit -m "Regresando al commit <commitId>"
 git push
 ```
-
-In the case that you want to go back to the last commit and you were just looking at the past of your code with no intention of reverting something, you can then go back with
+8. En el caso que solo estabas revisando el pasado del codigo sin querer revertir nada, puedes regresar al "presente" escribiendo
 
 ```bash
 git checkout master
 ```
 
-and if you want to go back to the changes of the last commit of a file
+9. Para regresar a los cambios del ultimo commit 
 
 ```bash
 git restore <file>
 ```
 
-## Merges
+### Merges
 
-If the development of your branch was successful and you want to join it to another that you already have, you can do a merge, and this will be as follows.
+Si en el caso contrario, el desarrollo en la nueva rama fue satisfactorio, y quieres que forme parte de la rama master (o de cualquier otra), debemos ejecutar los siguientes pasos
 
-1. First checkout the branch to which you want to receive the merge
-
-```bash
-git checkout <branchBase>
-```
-
-Once you are in the branch, from which you want to receive the merge
+1. Primero deberas estar parado en la rama en la cual quieres "recibir" los cambios
 
 ```bash
-git merge <branchInComming>
+git checkout <ramaQueRecibe>
 ```
 
-If you screwed up with the name of a branch, don't worry, you can rename it as
-
-(if you are in the branch you wanna rename)
-```bash
-git branch -m  <newName>
-```
-(if you are in another branch)
-```bash
-git branch -m  <oldName> <newName>
-```
-
-## Remote repository
-
-But ... what if your computer explodes alv?
-
-It would be great to have a backup in the cloud ... so now we will use GitHub or GitLab, it will be the same
-
-In the service you want the most, you can create a new repository, which you can clone by copying its URL with
+2. Ejecutar el merge a la rama
 
 ```bash
-git clone <remoteRepoLink>
+git merge <ramaQueLLega>
 ```
 
-In order to upload your commit info to a local repository you should do the following
+### Renombrar rama
+
+Si quieres cambiar el nombre de una rama que ya creaste
+
+(Si estas parado en la rama que quieres renombrar)
+
+```bash
+git branch -m  <nuevoNombre>
+```
+
+(Si estas parado en una rama aparte)
+```bash
+git branch -m  <viejoNombre> <nuevoNombre>
+```
+
+## Repositorio remoto (GitHub/GitLab)
+
+Pero... si tu computadora explota?
+
+Nos gustaria estar seguros que tenemos un respaldo de nuestro trabajo en caso de que no podamos acceder a nuestras computadoras
+
+Tanto en <a href="https://github.com/" target="_blank">GitHub</a> como en <a href="https://gitlab.com/" target="_blank">GitLab</a> puedes crear un repositorio remoto y clonar o solo clonar un repositorio ajeno y hacer
+
+```bash
+git clone <linkRepositorioRemoto>
+```
+
+1. Para subir cada commit que realices en tu repositorio deberas hacer lo que sigue
 
 ```bash
 git add .
-git commit -m "to remote repo alv"
-git push -u origin <branch>
+git commit -m "Al repo remoto alv"
+git push -u origin <Rama>
 ```
 
-In this case `origin` will be the name of the remote repository
+(`origin` es el nombre predeterminado del repositorio git remoto desde el que clonaste.)
 
-To download the changes from remote repository you must
+2. Para "descargar" los cambios que se hicieron al repo remoto
 
 ```bash
 git pulll
 ```
 
-If you are working on a computer and you delete a file to a repository, when you push it, it will no longer appear. But if you are working from another computer and you want to delete the files that are no longer being tracked by git, you can do
+Si está trabajando en una computadora y eliminas un archivo a un repositorio, cuando se haga push, ya no aparecerá. Pero si está trabajando desde otra computadora y desea eliminar los archivos que ya no están siendo rastreados por git, puedes hacer
 
 ```bash
 git clean -fd
 ```
 
-If you want to update the repository, and you are occupying another computer, or you want to be sure you will be in the last commit, execute
+Si deseas actualizar el repositorio y estas ocupando otra computadora, o quieres estar seguro de que estará en el ultimo commit, ejecuta
 
 ```bash
 git fetch  --all
-git reset --hard origin/<branchName>
+git reset --hard origin/<ramaDelCommit>
 ```
 
-If you want to delete a branch and you no longer want it to appear in your remote repo, write this
+Si quires eliminar una rama y que ya no aparezca en el repositorio remoto
 
 ```bash
-git push origin --delete <branchName>
+git push origin --delete <nombreRama>
 ```
 
-If you want to rename a branch that is in a remote repo... Well you can just delete that remote branch and upload the local branch with the new name ...duh!
+Si deseas cambiar el nombre de una rama que está en un repositorio remoto simplemente se debe eliminar esa rama remota y cargar la rama local con el nuevo nombre ... ¡duh!
 
-When you are on another computer, you will not get all the branches that are remote, but of course you will be able to see and interact with them, you just have to do
+Cuando estés en otra computadora, no veras todas las ramas que son remotas, pero por supuesto podrás verlas e interactuar con ellas, solo tienes que hacer
 
-```git
+```bash
 git remote update origin --prune
 git branch -a
 ```
